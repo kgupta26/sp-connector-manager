@@ -145,6 +145,9 @@ curl -u mds:mds -X POST "http://localhost:8091/security/1.0/principals/User%3Amd
 curl -u mds:mds -X POST "http://localhost:8091/security/1.0/rbac/principals" --silent \
   -H "accept: application/json"  -H "Content-Type: application/json" \
   -d "{\"clusters\":{\"kafka-cluster\":\"does_not_matter\"}}" | jq '.[]'
+echo -e "Start the localtunnel for connect management"
+
+#docker-compose up -d localtunnel
 
 echo -e "\n\n\n*****************************************************************************************************************"
 echo -e "DONE! Connect to Confluent Control Center at http://localhost:9021 (login as superUser/superUser for full access)"
