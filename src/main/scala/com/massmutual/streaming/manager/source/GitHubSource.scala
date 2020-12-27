@@ -48,9 +48,10 @@ class GitHubSource extends Source {
   }
 
   override def refresh(): Option[Reader] = {
-    val url =
-      s"https://$hostname/repos/$user/$repo/contents/$filepath?ref=$branch"
+    val url = s"https://$hostname/repos/$user/$repo/contents/$filepath"
+
     val request: Request = new Request(url)
+
     // super important in order to properly fail in case a timeout happens for example
     request.enableThrowingIOException(true)
 
@@ -59,12 +60,16 @@ class GitHubSource extends Source {
       val basicB64 = Base64.getEncoder.encodeToString(basic.getBytes("UTF-8"))
       request.header("Authorization", s"Basic $basicB64")
     })
+
     tokenOpt.foreach(token => {
       request.header("Authorization", s"Token $token")
     })
 
+    request.header("Accept", "application/vnd.github.v3+json")
+
     // we use this header for the 304
     lastModified.foreach(header => request.header("If-Modified-Since", header))
+
     val response: Response = HTTP.get(request)
 
     response.status match {
