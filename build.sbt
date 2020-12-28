@@ -11,7 +11,8 @@ libraryDependencies ++= Seq(
   "org.skinny-framework" %% "skinny-http-client" % "2.3.7",
   "com.typesafe" % "config" % "1.3.3",
   "com.thesamet.scalapb" %% "scalapb-json4s" % "0.10.1",
-  "org.json4s" %% "json4s-native" % "3.2.11",
+//  "org.json4s" %% "json4s-native" % "3.2.11",
+//  "org.json4s" %% "json4s-jackson" % "3.6.10",
   "org.sourcelab" % "kafka-connect-client" % "3.1.0"
 )
 

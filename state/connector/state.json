@@ -55,7 +55,7 @@
         "dest.kafka.sasl.login.callback.handler.class": "io.confluent.kafka.clients.plugins.auth.token.TokenUserLoginCallbackHandler",
         "dest.kafka.sasl.jaas.config": "org.apache.kafka.common.security.oauthbearer.OAuthBearerLoginModule required username=\"connectorSA\" password=\"connectorSA\" metadataServerUrls=\"http://kafka1:8091,http://kafka2:8092\";",
         "dest.kafka.sasl.mechanism": "OAUTHBEARER",
-        "confluent.topic.replication.factor": 1,
+        "confluent.topic.replication.factor": "1",
         "src.kafka.bootstrap.servers": "kafka1:10091",
         "src.kafka.security.protocol": "SASL_SSL",
         "src.kafka.ssl.key.password": "confluent",

@@ -14,8 +14,8 @@ import io.netty.handler.codec.http.HttpResponseStatus
 import org.json4s.JsonAST.JValue
 import org.sourcelab.kafka.connect.apiclient.request.dto.NewConnectorDefinition
 import org.json4s._
-import org.json4s.native.{Serialization, prettyJson}
-import org.json4s.native.Serialization.{read, write}
+import org.json4s.jackson.{Serialization, prettyJson}
+import org.json4s.jackson.Serialization.{read, write}
 import org.json4s._
 import org.json4s.JsonDSL._
 import org.json4s.jackson.JsonMethods._
