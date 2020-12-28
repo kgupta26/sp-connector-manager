@@ -101,7 +101,9 @@ object Operations {
 
     val commonConnectors = currentRunning.keySet & asPerState.keySet
 
-    val updatedConns = commonConnectors map { conn =>
+    val initial = Set[(String, Map[String, String])]()
+
+    val updatedConns = commonConnectors.foldLeft(initial) { case (acc, conn) =>
 
       val expectedConfigs = asPerState(conn)
 
@@ -119,7 +121,9 @@ object Operations {
         } else acc
       }
 
-      conn -> configsToUpdate
+      if (configsToUpdate.isEmpty) acc else {
+        acc + (conn -> configsToUpdate)
+      }
     }
 
     val applied = updatedConns map { uc =>
