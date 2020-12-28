@@ -11,7 +11,8 @@ libraryDependencies ++= Seq(
   "org.skinny-framework" %% "skinny-http-client" % "2.3.7",
   "com.typesafe" % "config" % "1.3.3",
   "com.thesamet.scalapb" %% "scalapb-json4s" % "0.10.1",
-"org.sourcelab" % "kafka-connect-client" % "3.1.0"
+  "org.json4s" %% "json4s-native" % "3.2.11",
+  "org.sourcelab" % "kafka-connect-client" % "3.1.0"
 )
 
 resolvers ++= Seq(
@@ -37,7 +38,7 @@ libraryDependencies ++= Seq(
 mainClass in assembly := Some("com.massmutual.streaming.manager.ConnectorService")
 assemblyJarName in assembly := name.value + ".jar"
 assemblyMergeStrategy in assembly := {
-    case PathList("META-INF", xs@_*) => MergeStrategy.discard
+  case PathList("META-INF", xs@_*) => MergeStrategy.discard
   //  case "application.conf" => MergeStrategy.concat
-    case _ => MergeStrategy.first
+  case _ => MergeStrategy.first
 }

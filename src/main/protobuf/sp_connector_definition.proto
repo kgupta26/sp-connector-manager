@@ -8,17 +8,18 @@ message SPConnectorDefinition {
   string ownerName = 3;
   string ownerEmail = 4;
   string tCode = 5;
-  string status = 6;
+  bool paused = 6;
   map<string, string> connectorConfig = 7;
 
   enum ConnectorType {
-    SOURCE = 0;
-    SINK = 1;
+    UNDEFINED = 0;
+    SOURCE = 1;
+    SINK = 2;
   }
 
   enum ConnectorStatus {
     RUNNING = 0;
-    PAUSED = 1;
+    FAILED = 1;
   }
 
   ConnectorType connectorType = 8;

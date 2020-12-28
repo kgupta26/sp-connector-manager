@@ -10,6 +10,8 @@ object ListAll extends Service[Request, Response] {
 
   def listNames: List[String] = client.getConnectors.asScala.toList
 
+  def listEverything: List[String] = client.getConnectors.asScala.toList
+
   override def apply(request: Request): Future[Response] = {
     val connectors = listNames
     val response = Response()
