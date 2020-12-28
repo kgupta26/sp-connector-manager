@@ -38,7 +38,7 @@
       "tCode": "T12345",
       "connectorType": "SOURCE",
       "connectorStatus" : "RUNNING",
-      "paused" : false,
+      "paused" : true,
       "connectorConfig": {
         "connector.class": "io.confluent.connect.replicator.ReplicatorSourceConnector",
         "topic.whitelist": "wikipedia.parsed",
