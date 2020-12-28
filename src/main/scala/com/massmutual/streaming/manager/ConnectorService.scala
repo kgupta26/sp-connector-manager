@@ -4,7 +4,7 @@ import java.io.File
 import java.net.InetSocketAddress
 
 import com.massmutual.streaming.manager.filter.{Authorize, HandleExceptions}
-import com.massmutual.streaming.manager.service.{ApplyChange, GetAllNames, ValidateService}
+import com.massmutual.streaming.manager.service.{ApplyChange, ListAll, ValidateService}
 import com.massmutual.streaming.manager.source.GitHubSource
 import com.twitter.finagle.http._
 import com.twitter.finagle.http.path._
@@ -45,7 +45,7 @@ object ConnectorService {
       val (method, path) = (request.method, Path(request.path))
       (method, path) match {
         case Method.Get -> Root / "validate" => ValidateService(request)
-        case Method.Get -> Root / "connectors" => GetAllNames(request)
+        case Method.Get -> Root / "connectors" => ListAll(request)
         case Method.Post -> Root / "connectors" / "apply" => ApplyChange(request)
         case _ => Future.exception(new IllegalArgumentException("Unknown path"))
       }

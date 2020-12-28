@@ -1,0 +1,8 @@
+syntax = "proto3";
+
+package com.massmutual.streaming.model;
+import "sp_connector_definition.proto";
+
+message SPConnectState {
+  repeated SPConnectorDefinition connectors = 1;
+}

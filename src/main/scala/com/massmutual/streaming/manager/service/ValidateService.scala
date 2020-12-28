@@ -2,7 +2,7 @@ package com.massmutual.streaming.manager.service
 
 import java.io.BufferedReader
 
-import com.massmutual.streaming.manager.ConnectorService.gitHubSource
+import com.massmutual.streaming.manager.ConnectorService.{config, gitHubSource}
 import com.twitter.finagle.Service
 import com.twitter.finagle.http.{MediaType, Request, Response}
 import com.twitter.util.Future
