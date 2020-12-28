@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package com.massmutual.streaming.model;
+
+message SPConnectorDefinition {
+  string nameSpace = 1;
+  string connectorName = 2;
+  string ownerName = 3;
+  string ownerEmail = 4;
+  string tCode = 5;
+  map<string, string> connectorConfig = 6;
+
+  enum ConnectorType {
+    SOURCE = 0;
+    SINK = 1;
+  }
+
+  ConnectorType connectorType = 7;
+}

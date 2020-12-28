@@ -10,7 +10,8 @@ libraryDependencies ++= Seq(
   "org.scalatest" %% "scalatest" % "3.2.2" % "test",
   "org.skinny-framework" %% "skinny-http-client" % "2.3.7",
   "com.typesafe" % "config" % "1.3.3",
-  "org.sourcelab" % "kafka-connect-client" % "3.1.0"
+  "com.thesamet.scalapb" %% "scalapb-json4s" % "0.10.1",
+"org.sourcelab" % "kafka-connect-client" % "3.1.0"
 )
 
 resolvers ++= Seq(
@@ -21,6 +22,16 @@ resolvers ++= Seq(
   "Artima Maven Repository" at "http://repo.artima.com/releases",
   "confluent" at "https://packages.confluent.io/maven/",
   "jitpack" at "https://jitpack.io"
+)
+
+PB.targets in Compile := Seq(
+  scalapb.gen() -> (sourceManaged in Compile).value / "scalapb"
+)
+
+// (optional) If you need scalapb/scalapb.proto or anything from
+// google/protobuf/*.proto
+libraryDependencies ++= Seq(
+  "com.thesamet.scalapb" %% "scalapb-runtime" % scalapb.compiler.Version.scalapbVersion % "protobuf"
 )
 
 mainClass in assembly := Some("com.massmutual.streaming.manager.ConnectorService")

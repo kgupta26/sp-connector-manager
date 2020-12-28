@@ -1,11 +1,13 @@
 package com.massmutual.streaming.manager.source
 
 import java.io.{Reader, StringReader}
+import java.net.URL
 import java.nio.charset.Charset
 import java.util.Base64
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.typesafe.config.Config
+import org.apache.http.client.methods.HttpUriRequest
 import org.slf4j.LoggerFactory
 import skinny.http.{HTTP, HTTPException, Request, Response}
 
@@ -74,7 +76,6 @@ class GitHubSource extends Source {
 
     response.status match {
       case 200 =>
-        lastModified = response.header("Last-Modified")
         val b64encodedContent =
           objectMapper.readTree(response.textBody).get("content").asText()
         val data = new String(
@@ -82,12 +83,8 @@ class GitHubSource extends Source {
             .decode(b64encodedContent.replace("\n", "").replace("\r", "")),
           Charset.forName("UTF-8")
         )
-        // use the CSV Parser
         Some(new StringReader(data))
-      case 304 =>
-        None
       case _ =>
-        // we got an http error so we propagate it
         log.warn(response.asString)
         throw HTTPException(Some(response.asString), response)
     }
