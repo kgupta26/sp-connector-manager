@@ -102,7 +102,7 @@
       "ownerName": "EDAP",
       "ownerEmail": "EDAP@massmutual.com",
       "tCode": "T12345",
-      "connectorType": "SOURCE",
+      "connectorType": "SINK",
       "connectorStatus" : "RUNNING",
       "paused" : false,
       "connectorConfig": {
