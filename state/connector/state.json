@@ -42,7 +42,7 @@
       "connectorConfig": {
         "connector.class": "io.confluent.connect.replicator.ReplicatorSourceConnector",
         "topic.whitelist": "wikipedia.parsed",
-        "topic.rename.format": "\\${topic}.replica",
+        "topic.rename.format": "${topic}.replica",
         "key.converter": "io.confluent.connect.replicator.util.ByteArrayConverter",
         "value.converter": "io.confluent.connect.replicator.util.ByteArrayConverter",
         "dest.kafka.bootstrap.servers": "kafka1:10091",
