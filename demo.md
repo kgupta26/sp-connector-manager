@@ -4,7 +4,8 @@ curl -X GET -H "Content-Type: application/json" \
     --cert /Users/mm10444/Projects/streaming-platform/sp-connector-manager/scripts/security/connect-manager.certificate.pem \
     --key /Users/mm10444/Projects/streaming-platform/sp-connector-manager/scripts/security/connect-manager.key \
     --cacert /Users/mm10444/Projects/streaming-platform/sp-connector-manager/scripts/security/snakeoil-ca-1.crt \
-    -u connectorSubmitter:connectorSubmitter https://swift-baboon-58.loca.lt/connectors
+    -u connectorSubmitter:connectorSubmitter https://localhost:8083/connectors
+    
 
 ## Build the Connect Manager Docker Image
 First task is to build your connect manager. So go ahead and run the following build command which will make your image made. Please note that this image needs to download specific certs from MassMutual artifactory. Therefore, it is required to be on the VPN.
@@ -25,10 +26,10 @@ This command will do two things essentially.
 
 For the most part, you should not need to worry about it once you launch the command. It might take some time because its download and building the images for you locally.
 
-## Run LocalTunnel to Access Connect Server from the Internet
-Since the `Confluent Connect` is running in its own Docker container we need to somehow make it accessible for `Connect Manager` (which runs on K8) to be able to to talk to it so that it can start/stop connectors.
+## Run LocalTunnel to access Confluent Connect server from the Internet
+Since the `Confluent Connect` is running in its own Docker container we need to somehow make it accessible for `Connect Manager` (which runs on K8) so that it can talk to it for starting and stopping connectors.
 
-Start a new terminal and run the following command.
+Start a new terminal and run the following command (from the project directory)
 
 ``` bash
 npx localtunnel --local-https true \
@@ -40,16 +41,22 @@ npx localtunnel --local-https true \
 
 **Note**: This demo requires npx installed. Please refer to [this page](https://github.com/localtunnel/localtunnel#quickstart) to understand how to install installation `localtunnel`.
 
-`Confluent Connect` service runs on 8083 mapped port on localhost. So simply allow (HTTPS) connections to it. The command will output a random DNS address. Now, Connect Server can be hit from the internet using that address!
+`Confluent Connect` service runs on 8083 mapped port on localhost. So simply allow (HTTPS) connections to it such that it uses the certs you have given it in the command. The command will output a random DNS address. Now, Connect Server can be hit from the internet using that address!
 
-## Run LocalTunnel to Access Connect Manager from the Internet
+Also note, since `Confluent Connect` server runs on STRE AWS and all the resources in MassMutual can talk to each other, the LocalTunnel step above is only so that application running on Kubernetes (`Connect Manager`) can talk to it via internet.
 
+## Start Connect Manager service on Kubernetes
+
+```bash
+kubectl create -f connect-manager-deployment.yaml
 ```
-kubectl expose deployment nginx --port=80 --type=LoadBalancer
-```
 
-### Why do we need to expost Connect and Connect Manager to the Internet
-This is because `Connect` and `Connect Manager` are on two different networks - one is in docker network and one is managed by K8. Since the networks are not known to each other we need some sort of tunneling between them. LocalTunnel is very easy to setup and get going!
+### Create a service 
+This will map a port on your node (localhost) route requests to internal container port of 8080. This mechanism is provisioned by specifying the type of the service as `NodePort`.
+
+```bash
+kubectl expose deployment connect-manager --port 8080 --name connect-manager-service --type NodePort
+```
 
 ## Test!
 Open up a new terminal and curl the following command which gets all the running connectors. This should output an empty collection since we have not started any connectors yet. But it didn't error out! 
@@ -68,3 +75,7 @@ curl -H 'Authorization: token cea118578a3984a089c5714e3351101883c0eecf' \
   -H 'Accept: application/vnd.github.v3.raw' \
   -O \
   -L https://api.github.com/repos/kgupta26/sp-connector-manager/contents/Dockerfile
+
+  curl -X GET -H "Content-Type: application/json" \
+    -u connectorSubmitter:connectorSubmitter https://localhost:8083/connectors
+    http://https//:localhost:8083

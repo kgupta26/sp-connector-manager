@@ -11,22 +11,19 @@ import com.twitter.finagle.Service
 import com.twitter.finagle.http.{MediaType, Request, Response}
 import com.twitter.util.Future
 import io.netty.handler.codec.http.HttpResponseStatus
-import org.json4s.JsonAST.JValue
-import org.sourcelab.kafka.connect.apiclient.request.dto.NewConnectorDefinition
-import org.json4s._
-import org.json4s.jackson.{Serialization, prettyJson}
-import org.json4s.jackson.Serialization.{read, write}
-import org.json4s._
 import org.json4s.JsonDSL._
+import org.json4s._
 import org.json4s.jackson.JsonMethods._
-import scalapb.json4s.JsonFormat
+import org.json4s.jackson.Serialization
+import org.json4s.jackson.Serialization.write
+import org.sourcelab.kafka.connect.apiclient.request.dto.NewConnectorDefinition
 
 import scala.collection.JavaConverters._
 import scala.language.postfixOps
 
-object ApplyChange extends Service[Request, Response] {
+object SynchronizationService {
 
-  implicit val formats = Serialization.formats(NoTypeHints)
+  implicit val formats: AnyRef with Formats = Serialization.formats(NoTypeHints)
 
   private def toNewConnectDefinition(spConnectorDefinition: SPConnectorDefinition): NewConnectorDefinition = {
     new NewConnectorDefinition(spConnectorDefinition.connectorName, spConnectorDefinition.connectorConfig.asJava)
@@ -36,18 +33,12 @@ object ApplyChange extends Service[Request, Response] {
     state.connectors.filter(c => !(current contains c.connectorName)) map toNewConnectDefinition
   }
 
-  private def startSync(state: SPConnectState) = {
-
-  }
-
-  override def apply(request: Request): Future[Response] = {
+  def apply(request: Request): Future[Response] = {
 
     //create the response
     val response: Response = Response()
     response.setContentTypeJson()
     response.setContentType(MediaType.JsonUtf8)
-
-    val runningList = ListAll.listNames toSet
 
     gitHubSource.refresh() match {
       case Some(reader) =>

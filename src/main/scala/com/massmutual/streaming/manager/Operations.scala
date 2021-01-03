@@ -2,6 +2,7 @@ package com.massmutual.streaming.manager
 
 import java.lang
 
+import com.massmutual.streaming.manager.service.InformationService.{listFailed, listPaused, listRunning}
 import com.massmutual.streaming.model.connector_state.SPConnectState
 import com.massmutual.streaming.model.sp_connector_definition.SPConnectorDefinition
 import org.sourcelab.kafka.connect.apiclient.KafkaConnectClient
@@ -54,11 +55,7 @@ object Operations {
 
   def applyPauseConnectors(state: SPConnectState, client: KafkaConnectClient): Set[(String, lang.Boolean)] = {
 
-    val currentRunning = client.getConnectorsWithExpandedStatus.getAllStatuses.asScala filter { x =>
-      x.getConnector.asScala("state").equalsIgnoreCase("running")
-    } map {
-      _.getName
-    } toSet
+    val currentRunning = listRunning
 
     val asPerStatePaused = state.connectors filter (_.paused) map (_.connectorName) toSet
 
@@ -73,11 +70,7 @@ object Operations {
 
   def applyResumeConnectors(state: SPConnectState, client: KafkaConnectClient): Set[(String, lang.Boolean)] = {
 
-    val currentPaused = client.getConnectorsWithExpandedStatus.getAllStatuses.asScala filter { x =>
-      x.getConnector.asScala("state").equalsIgnoreCase("paused")
-    } map {
-      _.getName
-    } toSet
+    val currentPaused = listPaused
 
     val asPerStateResumed = state.connectors filter (!_.paused) map (_.connectorName) toSet
 
@@ -85,6 +78,21 @@ object Operations {
 
     val applied = resumeConns map { rc =>
       rc -> client.resumeConnector(rc)
+    }
+
+    applied
+  }
+
+  def applyRestartConnectors(state: SPConnectState, client: KafkaConnectClient): Set[(String, lang.Boolean)] = {
+
+    val currentFailed = listFailed
+
+    val asPerStateResumed = state.connectors filter (!_.paused) map (_.connectorName) toSet
+
+    val restartConns = asPerStateResumed & currentFailed
+
+    val applied = restartConns map { rc =>
+      rc -> client.restartConnector(rc)
     }
 
     applied
@@ -139,11 +147,13 @@ object Operations {
       applyRemoveConnectors(state, client).map(_._1).toList,
       applyPauseConnectors(state, client).map(_._1).toList,
       applyResumeConnectors(state, client).map(_._1).toList,
-      applyUpdateConnectors(state, client).map(_.getName).toList
+      applyUpdateConnectors(state, client).map(_.getName).toList,
+      applyRestartConnectors(state, client).map(_._1).toList
     )
   }
 
   case class SyncResult(added: List[String], removed: List[String],
-                        paused: List[String], resumed: List[String], updated: List[String])
+                        paused: List[String], resumed: List[String],
+                        updated: List[String], restarted: List[String])
 
 }

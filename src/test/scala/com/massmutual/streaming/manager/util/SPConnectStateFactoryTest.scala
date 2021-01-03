@@ -44,7 +44,8 @@ class SPConnectStateFactoryTest extends org.scalatest.flatspec.AnyFlatSpec {
     val stringReader = new StringReader(jsonString)
     val bufferedReader = new BufferedReader(stringReader)
 
-    SPConnectStateFactory.fromReader(bufferedReader)
+//    SPConnectStateFactory.fromReader(bufferedReader)
+    JsonFormat.fromJsonString[SPConnectorDefinition](jsonString)
   }
 
   "Simple a set of connector definitions" should "parse fine" in {
@@ -182,6 +183,7 @@ class SPConnectStateFactoryTest extends org.scalatest.flatspec.AnyFlatSpec {
     val bufferedReader = new BufferedReader(stringReader)
 
     val state = SPConnectStateFactory.fromReader(bufferedReader)
+
 
     assert(state.connectors.length == 3)
   }

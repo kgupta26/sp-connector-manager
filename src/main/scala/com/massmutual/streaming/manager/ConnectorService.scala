@@ -4,7 +4,7 @@ import java.io.File
 import java.net.InetSocketAddress
 
 import com.massmutual.streaming.manager.filter.{Authorize, HandleExceptions}
-import com.massmutual.streaming.manager.service.{ApplyChange, ListAll, ValidateService}
+import com.massmutual.streaming.manager.service.{SynchronizationService, InformationService, ValidationService}
 import com.massmutual.streaming.manager.source.GitHubSource
 import com.twitter.finagle.http._
 import com.twitter.finagle.http.path._
@@ -31,6 +31,9 @@ object ConnectorService {
 
     conf
       .useBasicAuth(userName, password)
+      //      .useKeyStore(
+      //        new File("/Users/mm10444/Projects/streaming-platform/sp-connector-manager/scripts/security/kafka.connect-manager.keystore.jks"),
+      //        "confluent")
       .useTrustStore(new File(truststoreFile), truststorePass)
   }
 
@@ -44,9 +47,9 @@ object ConnectorService {
     val routeIt: Service[Request, Response] = request => {
       val (method, path) = (request.method, Path(request.path))
       (method, path) match {
-        case Method.Get -> Root / "validate" => ValidateService(request)
-        case Method.Get -> Root / "connectors" => ListAll(request)
-        case Method.Post -> Root / "connectors" / "apply" => ApplyChange(request)
+        case Method.Get -> Root / "validate" => ValidationService(request)
+        case Method.Get -> "connectors" /: _ => InformationService(request)
+        case Method.Post -> Root / "connectors" / "sync" => SynchronizationService(request)
         case _ => Future.exception(new IllegalArgumentException("Unknown path"))
       }
     }
