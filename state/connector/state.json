@@ -1,4 +1,4 @@
-{
+
   "connectors": [
     {
       "nameSpace": "com.massmutual.wikipedia",
@@ -8,7 +8,7 @@
       "tCode": "T12345",
       "connectorType": "SOURCE",
       "connectorStatus" : "RUNNING",
-      "pausedd" : false,
+      "paused" : false,
       "connectorConfig": {
         "connector.class": "com.github.cjmatta.kafka.connect.irc.IrcSourceConnector",
         "transforms": "WikiEditTransformation",
