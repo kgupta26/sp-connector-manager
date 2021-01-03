@@ -2,7 +2,7 @@
   "connectors": [
     {
       "nameSpace": "com.massmutual.wikipedia",
-      "connectorName": "wikipedia-irc-2",
+      "connectorName": "wikipedia-irc",
       "ownerName": "EDAP",
       "ownerEmail": "EDAP@massmutual.com",
       "tCode": "T12345",
