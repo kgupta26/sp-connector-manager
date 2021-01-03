@@ -54,11 +54,6 @@ object ValidationService {
 
   def apply(request: Request): Future[Response] = {
 
-    //create the response
-    val response: Response = Response()
-    response.setContentTypeJson()
-    response.setContentType(MediaType.PlainText)
-
     gitHubSource.refresh() match {
       case Some(reader) =>
 
@@ -71,6 +66,7 @@ object ValidationService {
             //close the reader to avoid leak
             reader.close()
             validateStateFile(state)
+
           case Failure(ex) =>
             Future.exception(ValidationServiceException(ex.getMessage))
         }
@@ -78,7 +74,6 @@ object ValidationService {
       case _ =>
         Future.exception(ValidationServiceException("No state found"))
     }
-    Future.value(response)
   }
 
   case class ValidationServiceException(message: String) extends Throwable {

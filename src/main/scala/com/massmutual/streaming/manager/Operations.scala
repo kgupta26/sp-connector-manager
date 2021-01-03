@@ -117,21 +117,26 @@ object Operations {
 
       val actualConfigs = currentRunning(conn)
 
-      val commonKeys = expectedConfigs.keySet & currentRunning.keySet
+      val commonKeys = expectedConfigs.keySet & actualConfigs.keySet
 
-      val configsToUpdate = commonKeys.foldLeft(Map[String, String]()) { (acc, k) =>
-
-        val expectedValue = expectedConfigs(k)
-        val actualValue = actualConfigs(k)
-
-        if (expectedValue != actualValue) {
-          acc + (k -> expectedValue)
-        } else acc
+      val needsUpdate = commonKeys exists { c =>
+        expectedConfigs(c) != actualConfigs(c)
       }
 
-      if (configsToUpdate.isEmpty) acc else {
-        acc + (conn -> configsToUpdate)
-      }
+      //      val configsToUpdate = commonKeys.foldLeft(Map[String, String]()) { (acc, k) =>
+      //
+      //        val expectedValue = expectedConfigs(k)
+      //        val actualValue = actualConfigs(k)
+      //
+      //        if (expectedValue != actualValue) {
+      //          acc + (k -> expectedValue)
+      //        } else acc
+      //      }
+
+      //      if (configsToUpdate.isEmpty) acc else {
+      //        acc + (conn -> configsToUpdate)
+      //      }
+      if (needsUpdate) acc + (conn -> expectedConfigs) else acc
     }
 
     val applied = updatedConns map { uc =>
