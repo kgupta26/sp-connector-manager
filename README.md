@@ -174,3 +174,9 @@ As you can see it can validate the state of the file. With the `validation` api 
 
 Feel free to play more and maybe change the name of the connectors so that there are multiple of them with the same name. And when we call the `validate` api again, it should return a status of Bad Request and associated error message. 
 
+## Clean Up
+Run script to clean up your containers.
+```
+$ ./scripts/app/stop_consumer_app_group_graceful.sh
+$ ./scripts/stop.sh
+```
