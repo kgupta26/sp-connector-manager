@@ -13,6 +13,16 @@ As the streaming platform grows in terms of use cases, so will the number of con
 
 With the help of some conformity (state file), we can control ownership of the connectors and automate notification based on the supplied owner's information when connector is having some issue, for example. Other advantages include automation of RFC when there is a new connector, or perhaps we need to update an existing one. Whatever the case maybe, each should go through a set of approval process, validation steps, and a report should be generated upon acceptance.
 
+## Overall Design
+
+![Image of Yaktocat](docs/images/connect-manager.png)
+
+1. Work with developers/admins and decide on the connector configuration needed.
+2. Make a pull request to get that connector added into the state file.
+3. Jenkins reads the new commit on the state file and requests `Connect Manager` to apply the change.
+4. Connect Manager adds the connector
+5. Jenkins recieives a confirmation from the service and notifies the admins on teams/slack.
+
 ## Proof of Concept
 This project is a service on top of Kafka Connect that reads a state file and applies changes to the Connect servers. For demonstration purposes we will show the working of following capabilities through this service API:
 
