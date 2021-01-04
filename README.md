@@ -68,7 +68,7 @@ If you were able to get this far, we are ready to rock and roll! :godmode:
 
 ### Get a list of Running Connectors
 
-* Validate. Let's check if the service is up. The Connect Manager is running on `localhost:8080`. Let's make a request to get a list of running connectors. Open a new terminal and run:
+* Let's check if the service is up. The Connect Manager is running on `localhost:8080`. Let's make a request to get a list of running connectors. Open a new terminal and run:
 
 ```
 curl -X GET -H 'Authorization: open sesame' 'http://localhost:8080/connectors/running'
