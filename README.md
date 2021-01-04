@@ -30,7 +30,7 @@ This project is a service on top of Kafka Connect that reads a state file and ap
 
 ### Start Connect Servers
 
-* Start the confluent connect server (actually all the confluent stuff). Simply run the following command in your terminal. It takes a couple of minutes. (Feel free to get a cup of coffee!)
+* Start the confluent connect server (actually all the confluent stuff). Simply run the following command in your terminal. It takes a couple of minutes. (Feel free to get a cup of coffee!) :turtle:
 
 ```bash
 ./scripts/start.sh
@@ -64,7 +64,7 @@ Jan 03, 2021 4:57:49 PM com.twitter.finagle.Init$ $anonfun$once$1
 INFO: Finagle version 20.12.0 (rev=762bc8512b820e936283d64f4ab27134969193b0) built at 20201210-195733
 ```
 
-If you were able to get this far, we are ready to rock and roll! :godmode:
+If you were able to get this far, we are ready to rock and roll! :feelsgood:
 
 ### Get a list of Running Connectors
 
@@ -74,6 +74,8 @@ If you were able to get this far, we are ready to rock and roll! :godmode:
 curl -X GET -H 'Authorization: open sesame' 'http://localhost:8080/connectors/running'
 ["replicate-topic","elasticsearch-ksqldb","wikipedia-irc"]
 ```
+
+Those connectors are spun up by the script we ran to run Confluent. The script starts three connectors and that's what we see!
 
 ### Pause a connector
 Now lets make a connector pause. It is important to understand that although the state file is present in this repository ideally it will exist in its own. We want to make sure the service, and the state files are decoupled. Because this is a POC, I thought it would be easier to deal with one repo. After all, one can decide the state file perhaps stays in S3. The idea is to make a pull request, and a deploy makes it available wherever we want. For now lets work with github only.
