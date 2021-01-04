@@ -93,7 +93,7 @@ Now, run the `sync` api on the connect manager.
 $ curl -X POST -H 'Authorization: open sesame' 'http://localhost:8080/connectors/sync'
 ```
 
-The response will be a list of connectors that were added, removed, updated, paused, and restarted. We can see `wikipedia-irc` being mentioned under paused. Congrats we successfully deployed a state change! 
+The response will be a list of connectors that were `added`, `removed`, `updated`, `paused`, and `restarted`. We can see `wikipedia-irc` being mentioned under paused. Congrats we successfully deployed a state change! :feelsgood: 
 
 To validate lets run another curl command to get a list of paused connectors.
 
@@ -163,6 +163,12 @@ curl -X POST -H 'Authorization: open sesame' 'http://localhost:8080/connectors/s
 ```
 
 Now it should `wikipedia-irc` in the updated section of the response!
+
+### No Operation
+If nothing is changed in the state file and you run the `sync` api nothing will be applied to the connect service. The service checks the state and the connectors state on the connect servers. If there are differences, only then changes are applied. Therefore, if you simply run the `sync` again it will respond with all list empty for fields `added`, `removed`, `updated`, `paused`, and `restarted`.
+
+### Restarting Connectors
+Restarting connectors through a state file is tricky. Since the operation itself doesn't really change an existing state of the connector, its function is a little different than the ones we discussed above. However, if there are connectors with the status `FAILED` on the connect server, everytime we run `sync` the `Connect Manager` service will attempt to restart what is failed. However, this is subjected to change and need a bit more thinking to be honest and that's why I haven't incorporated it in the demo. :exclamation: 
 
 ## Validation
 Prior to making the `sync` calls we might have issues where format of the state file is syntactically wrong. Or perhaps two connectors cannot have the same name. Errors like these can happen. Therefore, we need to be able to catch such things. 
