@@ -15,7 +15,7 @@ With the help of some conformity (state file), we can control ownership of the c
 
 ## Overall Design
 
-![Image of Yaktocat](docs/images/connect-manager.png)
+![Workflow](docs/images/connect-manager.png)
 
 1. Work with developers/admins and decide on the connector configuration needed.
 2. Make a pull request to get that connector added into the state file.
