@@ -8,7 +8,7 @@
       "tCode": "T12345",
       "connectorType": "SOURCE",
       "connectorStatus" : "RUNNING",
-      "paused" : false,
+      "paused" : true,
       "connectorConfig": {
         "connector.class": "com.github.cjmatta.kafka.connect.irc.IrcSourceConnector",
         "transforms": "WikiEditTransformation",
