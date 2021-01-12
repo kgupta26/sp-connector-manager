@@ -12,6 +12,7 @@ import com.twitter.finagle.{Http, ListeningServer, Service}
 import com.twitter.util.{Await, Future}
 import com.typesafe.config.{Config, ConfigFactory}
 import org.sourcelab.kafka.connect.apiclient.{Configuration, KafkaConnectClient}
+import io.confluent.security.authorizer
 
 object ConnectorService {
 
@@ -31,11 +32,10 @@ object ConnectorService {
 
     conf
       .useBasicAuth(userName, password)
-      //      .useKeyStore(
-      //        new File("/Users/mm10444/Projects/streaming-platform/sp-connector-manager/scripts/security/kafka.connect-manager.keystore.jks"),
-      //        "confluent")
       .useTrustStore(new File(truststoreFile), truststorePass)
   }
+
+
 
   val client = new KafkaConnectClient(configuration)
 

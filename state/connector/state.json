@@ -7,7 +7,6 @@
       "ownerEmail": "EDAP@massmutual.com",
       "tCode": "T12345",
       "connectorType": "SOURCE",
-      "connectorStatus" : "RUNNING",
       "paused" : false,
       "connectorConfig": {
         "connector.class": "io.confluent.connect.replicator.ReplicatorSourceConnector",

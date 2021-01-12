@@ -5,14 +5,16 @@ version := "0.1"
 scalaVersion := "2.12.7"
 
 libraryDependencies ++= Seq(
+  "com.github.finagle" %% "finch-core" % "0.31.0",
+  "io.confluent" % "rbac" % "5.5.1-ce" exclude("javax.ws.rs", "javax.ws.rs-api"),
   "com.twitter" %% "finagle-http" % "20.12.0",
   "com.github.finagle" %% "finagle-oauth2" % "19.8.0",
-  "org.scalatest" %% "scalatest" % "3.2.2" % "test",
+  "org.scalatest" %% "scalatest" % "3.0.5" % "test",
   "org.skinny-framework" %% "skinny-http-client" % "2.3.7",
   "com.typesafe" % "config" % "1.3.3",
   "com.thesamet.scalapb" %% "scalapb-json4s" % "0.10.1",
-//  "org.json4s" %% "json4s-native" % "3.2.11",
-//  "org.json4s" %% "json4s-jackson" % "3.6.10",
+  "org.testcontainers" % "kafka" % "1.15.1",
+  "io.confluent" % "kafka-schema-registry" % "5.5.1",
   "org.sourcelab" % "kafka-connect-client" % "3.1.0"
 )
 

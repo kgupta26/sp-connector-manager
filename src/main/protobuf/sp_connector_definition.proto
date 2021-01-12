@@ -18,7 +18,7 @@ message SPConnectorDefinition {
   }
 
   enum ConnectorStatus {
-    RUNNING = 0;
+    IN_DEVELOPMENT = 0;
     FAILED = 1;
   }
 

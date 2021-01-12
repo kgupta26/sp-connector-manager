@@ -1,7 +1,6 @@
 package com.massmutual.streaming.manager.service
 
 import java.io.BufferedReader
-
 import com.massmutual.streaming.manager.ConnectorService.{client, gitHubSource}
 import com.massmutual.streaming.manager.Operations
 import com.massmutual.streaming.manager.util.SPConnectStateFactory
@@ -20,25 +19,17 @@ import org.sourcelab.kafka.connect.apiclient.request.dto.NewConnectorDefinition
 
 import scala.collection.JavaConverters._
 import scala.language.postfixOps
+import scala.util.{Failure, Success, Try}
 
 object SynchronizationService {
 
   implicit val formats: AnyRef with Formats = Serialization.formats(NoTypeHints)
-
-  private def toNewConnectDefinition(spConnectorDefinition: SPConnectorDefinition): NewConnectorDefinition = {
-    new NewConnectorDefinition(spConnectorDefinition.connectorName, spConnectorDefinition.connectorConfig.asJava)
-  }
-
-  private def findNewConnector(current: Set[String], state: SPConnectState): Seq[NewConnectorDefinition] = {
-    state.connectors.filter(c => !(current contains c.connectorName)) map toNewConnectDefinition
-  }
 
   def apply(request: Request): Future[Response] = {
 
     //create the response
     val response: Response = Response()
     response.setContentTypeJson()
-    response.setContentType(MediaType.JsonUtf8)
 
     gitHubSource.refresh() match {
       case Some(reader) =>
@@ -48,17 +39,26 @@ object SynchronizationService {
         reader.close()
 
         //synchronize
-        val result: Operations.SyncResult = Operations.synchronize(sourceState, client)
+        Try(Operations.synchronize(sourceState, client)) match {
+          //if a failure just, just return
+          case Failure(ex) => return Future.exception(ex)
+          case Success(result) =>
 
-        val jsonString = write(result)
+            val jsonString = write(result)
 
-        response.setContentString(pretty(render(jsonString)))
+            response.setContentString(jsonString)
 
-        response.statusCode(HttpResponseStatus.OK.code())
+            response.setContentType(MediaType.JsonUtf8)
+
+            response.statusCode(HttpResponseStatus.CREATED.code())
+
+        }
       case _ =>
+        response.setContentType(MediaType.PlainTextUtf8)
         response.statusCode(HttpResponseStatus.UNPROCESSABLE_ENTITY.code())
-        response.setContentString("Empty State")
+        response.setContentString("~Empty State~")
     }
+
     Future.value(response)
   }
 }
